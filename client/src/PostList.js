@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import CommentCreate from './CommentCreate';
 import axios from "axios"; 
 
 const PostList = () => {
@@ -25,6 +26,7 @@ const PostList = () => {
             <h3>
                 {post.title}
             </h3>
+            <CommentCreate postId={post.id} />
         </div>
       </div>
     );
