@@ -35,6 +35,13 @@ app.post('/posts', async (req, res) => {
     res.status(201).send(posts[id]);
 });
 
+// For communicating with the event bus
+app.post('/events', (req, res) => {
+    console.log('Received Event', req.body.type);
+
+    res.send({});
+});
+
 app.listen( 4000, () => {
     console.log('Listening on 4000');
 });
