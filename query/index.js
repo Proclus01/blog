@@ -10,14 +10,7 @@ app.use(cors());
 // Data structure to store our posts and comments
 const posts = {};
 
-app.get('/posts', (req, res) => {
-    res.send(posts);
-});
-
-// Collect posts and comments into a single, consistent data structure
-app.post('/events', (req, res) => {
-    const { type, data } = req.body;
-
+const handleEvent = (type, data) => {
     if (type === 'PostCreated') {
         const { id, title } = data;
 
@@ -43,8 +36,18 @@ app.post('/events', (req, res) => {
         comment.status = status;
         comment.content = content;
     }
+};
 
-    console.log(posts);
+app.get('/posts', (req, res) => {
+    res.send(posts);
+});
+
+// Collect posts and comments into a single, consistent data structure
+app.post('/events', (req, res) => {
+    const { type, data } = req.body;
+
+    handleEvent(type, data);
+
     res.send({});
 });
 
