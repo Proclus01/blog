@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-srv
+spec:
+  # This is how we tell K8s to make a Node Port
+  type: NodePort
+  # Tell the service to find all pods with a label of app: posts and expose them to the internet
+  selector:
+    app: posts
+  # Designate the ports we want to expose on the target pod
+  ports:
+    - name: posts
+      protocol: TCP
+      # This is the port on the Node Port Service, it redirects traffic to targetPort
+      port: 4000
+      # This is the port inside the pod of the port container
+      targetPort: 4000

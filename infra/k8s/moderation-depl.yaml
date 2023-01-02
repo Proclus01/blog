@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderation-depl
+spec:
+  # replicas = number of pods we want to create for some particular image
+  replicas: 1
+  # selector tells the Deployment which pods to manage and find all pods with label app: posts
+  selector:
+    matchLabels:
+      app: moderation
+  # template is where we specify the exact configuration of a pod the deployment will create
+  template:
+    metadata:
+      labels:
+        # tells the pod to have a label of app: moderation
+        app: moderation
+    # describes the specification or config options for the pod we're making
+    spec:
+      containers:
+        - name: moderation
+          image: proclus01/moderation
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moderation-srv
+spec:
+  selector: # Tell the service to look for the moderation
+    app: moderation
+  type: ClusterIP # K8s will default to a ClusterIP service if we don't specify it
+  ports:
+    - name: moderation
+      protocol: TCP
+      port: 4003
+      targetPort: 4003

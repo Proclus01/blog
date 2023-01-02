@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+spec:
+  # replicas = number of pods we want to create for some particular image
+  replicas: 1
+  # selector tells the Deployment which pods to manage and find all pods with label app: posts
+  selector:
+    matchLabels:
+      app: posts
+  # template is where we specify the exact configuration of a pod the deployment will create
+  template:
+    metadata:
+      labels:
+        # tells the pod to have a label of app: posts
+        app: posts
+    # describes the specification or config options for the pod we're making
+    spec:
+      containers:
+        - name: posts
+          image: proclus01/posts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-clusterip-srv # To distinguish from the existing posts-srv created
+spec:
+  selector: # Tell the service to look for the posts file
+    app: posts
+  type: ClusterIP # K8s will default to a ClusterIP service if we don't specify it
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000
+      targetPort: 4000
