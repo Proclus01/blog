@@ -1,0 +1,62 @@
+apiVersion: skaffold/v2beta4
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  # Tell Skaffold that there's a pod that's running code in our client dir
+  # Whenver anything changes, Skaffold will take those changes and update our pod
+  artifacts:
+    - image: proclus01/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      # Look for a JS file and automatically update the pod for the files in place
+      # And for all other files, rebuild the entire pod
+      sync: 
+        manual:
+          - src: 'src/**/*.js'
+            dest: .
+    - image: proclus01/comments
+      context: comments
+      docker:
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: proclus01/event-bus
+      context: event-bus
+      docker:
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: . 
+    - image: proclus01/moderation
+      context: moderation
+      docker:
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .             
+    - image: proclus01/posts
+      context: posts
+      docker:
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .       
+    - image: proclus01/query
+      context: query
+      docker:
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .   
